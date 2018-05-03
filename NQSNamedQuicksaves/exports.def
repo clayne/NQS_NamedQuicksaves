@@ -1,0 +1,4 @@
+LIBRARY	"NQSNamedQuicksaves"
+EXPORTS
+SKSEPlugin_Query
+SKSEPlugin_Load
