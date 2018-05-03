@@ -1,8 +1,0 @@
-﻿  NQSUtility.cpp
-     Creating library C:\Users\ryan_\Desktop\skse64_2_00_07\src\skse64\x64\Release\NQSNamedQuicksaves.lib and object C:\Users\ryan_\Desktop\skse64_2_00_07\src\skse64\x64\Release\NQSNamedQuicksaves.exp
-  Generating code
-  6 of 553 functions ( 1.1%) were compiled, the rest were copied from previous compilation.
-    1 functions were new in current compilation
-    33 functions had inline decision re-evaluated but remain unchanged
-  Finished generating code
-  NQSNamedQuicksaves.vcxproj -> C:\Users\ryan_\Desktop\skse64_2_00_07\src\skse64\x64\Release\NQSNamedQuicksaves.dll
