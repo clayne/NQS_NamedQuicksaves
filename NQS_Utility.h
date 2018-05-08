@@ -4,9 +4,9 @@
 #include "../skse64/PapyrusNativeFunctions.h"
 
 
-namespace NQSUtility
+namespace NQS_NamedQuicksaves_Utility
 {
-	BSFixedString getPlayerHash(StaticFunctionTag* base);
+	BSFixedString GetPlayerHash(StaticFunctionTag* base);
 	// Gets the player's save profile hash
 
 	BSFixedString StringToHex(StaticFunctionTag* base, BSFixedString a_string);

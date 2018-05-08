@@ -5,9 +5,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NQSUtility.cpp" />
+    <ClCompile Include="NQS_Utility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NQSUtility.h" />
+    <ClInclude Include="NQS_Utility.h" />
   </ItemGroup>
 </Project>

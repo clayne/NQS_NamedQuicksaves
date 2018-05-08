@@ -7,12 +7,12 @@
 #include <string>
 
 
-#include "NQSUtility.h"
+#include "NQS_Utility.h"
 
 
-namespace NQSUtility
+namespace NQS_NamedQuicksaves_Utility
 {
-	BSFixedString getPlayerHash(StaticFunctionTag* base)
+	BSFixedString GetPlayerHash(StaticFunctionTag* base)
 	{
 		// Grab player hash
 		static RelocPtr <SInt32> playerHash(0x34BC3F4);
@@ -29,7 +29,7 @@ namespace NQSUtility
 
 		// Sign extension
 		while (std::strlen(hexName.c_str()) < 8) {
-			hexName += '0';
+			hexName = '0' + hexName;
 		}
 
 		return hexName.c_str();
@@ -59,9 +59,9 @@ namespace NQSUtility
 	bool RegisterFuncs(VMClassRegistry* registry)
 	{
 		registry->RegisterFunction(
-			new NativeFunction0 <StaticFunctionTag, BSFixedString>("getPlayerHash", "NQSUtility", NQSUtility::getPlayerHash, registry));
+			new NativeFunction0 <StaticFunctionTag, BSFixedString>("GetPlayerHash", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::GetPlayerHash, registry));
 		registry->RegisterFunction(
-			new NativeFunction1 <StaticFunctionTag, BSFixedString, BSFixedString>("StringToHex", "NQSUtility", NQSUtility::StringToHex, registry));
+			new NativeFunction1 <StaticFunctionTag, BSFixedString, BSFixedString>("StringToHex", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::StringToHex, registry));
 
 		return true;
 	}
