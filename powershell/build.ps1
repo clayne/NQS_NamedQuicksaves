@@ -11,15 +11,11 @@ $flags = $sseSrc + "\TESV_Papyrus_Flags.flg"
 
 
 # COMPILE PAPYRUS SCRIPTS
-Get-ChildItem "$usrSrc\Scripts\Source" -Filter *.psc | 
-Foreach-Object {
-	$file = $_.FullName
-    & "$papyrus" "$file" -f="$flags" -i="$sseSrc;$usrSrc\Scripts\Source" -o="$outDir\Scripts"
-}
+& "$papyrus" "$usrSrc\Scripts\Source" -f="$flags" -i="$sseSrc;$usrSrc\Scripts\Source" -o="$outDir\Scripts" -a
 
 
 # MOVE TRANSLATION FILES
-Get-ChildItem "$usrSrc\Interface\Translations" -Filter *.txt | 
+Get-ChildItem "$usrSrc\Interface\Translations" -Filter *.txt |
 Foreach-Object {
 	$filePath = $_.FullName
 	$fileName = $_.Name
@@ -29,7 +25,7 @@ Foreach-Object {
 
 
 # MOVE DLLS
-Get-ChildItem "$usrSrc\SKSE\Plugins" -Filter *.dll | 
+Get-ChildItem "$usrSrc\SKSE\Plugins" -Filter *.dll |
 Foreach-Object {
 	$filePath = $_.FullName
 	$fileName = $_.Name

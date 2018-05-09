@@ -1,4 +1,4 @@
-ScriptName NQS_NamedQuicksaves_Main Extends ReferenceAlias
+ScriptName NQS_NamedQuicksaves_Main Extends Quest
 
 
 Import NQS_NamedQuicksaves_Utility
@@ -9,9 +9,13 @@ GlobalVariable Property _NQS_CyclicSaveKey Auto
 GlobalVariable Property _NQS_CyclicMaxSaves Auto
 GlobalVariable Property _NQS_CyclicSaveIndex Auto
 GlobalVariable Property _NQS_IntervalActive Auto
-GlobalVariable Property _NQS_IntervalDuration Auto
 GlobalVariable Property _NQS_IntervalMaxSaves Auto
+GlobalVariable Property _NQS_IntervalDuration Auto
 GlobalVariable Property _NQS_IntervalSaveIndex Auto
+GlobalVariable Property _NQS_ConditionalActive Auto
+GlobalVariable Property _NQS_ConditionalMaxSaves Auto
+GlobalVariable Property _NQS_ConditionalSaveIndex Auto
+Actor Property _NQS_PlayerRef Auto
 
 
 Event OnInit()
@@ -22,9 +26,12 @@ Event OnInit()
 	_NQS_CyclicMaxSaves.SetValue(10)
 	_NQS_CyclicSaveIndex.SetValue(1)
 	_NQS_IntervalActive.SetValue(0)
-	_NQS_IntervalDuration.SetValue(30.0)
 	_NQS_IntervalMaxSaves.SetValue(10)
+	_NQS_IntervalDuration.SetValue(30.0)
 	_NQS_IntervalSaveIndex.SetValue(1)
+	_NQS_ConditionalActive.SetValue(0)
+	_NQS_ConditionalMaxSaves.SetValue(10)
+	_NQS_ConditionalSaveIndex.SetValue(1)
 EndEvent
 
 
@@ -39,7 +46,7 @@ EndEvent
 
 Event OnUpdate()
 	NQS_MakeSave(_NQS_IntervalMaxSaves, _NQS_IntervalSaveIndex, "Interval")
-	RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float)
+	RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
 EndEvent
 
 
@@ -58,7 +65,7 @@ EndFunction
 
 
 ; Resets a GlobalVariable to its default value.
-; a_globalVar - The GlobalVariable to reset.
+; a_globalVar - The variable to reset.
 Function NQS_Reset(GlobalVariable a_globalVar)
 	If (a_globalVar == _NQS_ManualSaveKey)
 		NQS_UnregisterOldKey(_NQS_ManualSaveKey.GetValue() As Int)
@@ -72,12 +79,19 @@ Function NQS_Reset(GlobalVariable a_globalVar)
 		_NQS_CyclicSaveIndex.SetValue(1)
 	ElseIf (a_globalVar == _NQS_IntervalActive)
 		_NQS_IntervalActive.SetValue(0)
-	ElseIf (a_globalVar == _NQS_IntervalDuration)
-		_NQS_IntervalDuration.SetValue(30.0)
+		UnregisterForUpdate()
 	ElseIf (a_globalVar == _NQS_IntervalMaxSaves)
 		_NQS_IntervalMaxSaves.SetValue(10)
+	ElseIf (a_globalVar == _NQS_IntervalDuration)
+		_NQS_IntervalDuration.SetValue(30.0)
 	ElseIf (a_globalVar == _NQS_IntervalSaveIndex)
 		_NQS_IntervalSaveIndex.SetValue(1)
+	ElseIf (a_globalVar == _NQS_ConditionalActive)
+		_NQS_ConditionalActive.SetValue(0)
+	ElseIf (a_globalVar == _NQS_ConditionalMaxSaves)
+		_NQS_ConditionalMaxSaves.SetValue(10)
+	ElseIf (a_globalVar == _NQS_ConditionalSaveIndex)
+		_NQS_ConditionalSaveIndex.SetValue(1)
 	EndIf
 EndFunction
 
@@ -87,27 +101,29 @@ EndFunction
 ; a_saveIndex - The index the current savetype is at (resets when it exceeds a_maxSaves).
 ; a_type - The type of the save to be made.
 Function NQS_MakeSave(GlobalVariable a_maxSaves, GlobalVariable a_saveIndex, String a_type)
-	If ((a_saveIndex.GetValue() As Int) > (a_maxSaves.GetValue() As Int))
+	If (a_saveIndex.GetValue() As Int > a_maxSaves.GetValue() As Int)
 		NQS_Reset(a_saveIndex)
 	EndIf
-	String playerName = Game.GetPlayer().GetActorBase().GetName()
+	String playerName = _NQS_PlayerRef.GetActorBase().GetName()
 	String hexName = StringToHex(playerName)
-	Game.SaveGame("Save" + Math.Floor(a_saveIndex.GetValue() As Int) + "_"+ getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
-	a_saveIndex.SetValue((a_saveIndex.GetValue() As Int) + 1)
-	Debug.Notification("Saving...")
+	Game.SaveGame("Save" + Math.Floor(a_saveIndex.GetValue() As Int) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
+	a_saveIndex.SetValue(a_saveIndex.GetValue() As Int + 1)
+	Debug.Notification("$Saving...")
 EndFunction
 
 
-; Toggles interval save on/off
-Function NQS_IntervalToggle()
-	If ((_NQS_IntervalActive.GetValue() As Int) != 0)
-		_NQS_IntervalActive.SetValue(0)
+; Toggles variable on/off.
+; a_globalVar - The variable to toggle.
+Function NQS_Toggle(GlobalVariable a_globalVar)
+	If (a_globalVar.GetValue() As Bool)
+		NQS_Reset(a_globalVar)
 	Else
-		_NQS_IntervalActive.SetValue(1)
+		a_globalVar.SetValue(1)
 	EndIf
-	If (_NQS_IntervalActive.GetValue() As Bool)
-		RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float)
-	Else
-		UnregisterForUpdate()
+
+	If (a_globalVar == _NQS_IntervalActive)
+		If (_NQS_IntervalActive.GetValue() As Bool)
+			RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
+		EndIf
 	EndIf
 EndFunction

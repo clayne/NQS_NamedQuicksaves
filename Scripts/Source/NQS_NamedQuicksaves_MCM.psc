@@ -6,18 +6,13 @@ GlobalVariable Property _NQS_CyclicSaveKey Auto
 GlobalVariable Property _NQS_CyclicMaxSaves Auto
 GlobalVariable Property _NQS_CyclicSaveIndex Auto
 GlobalVariable Property _NQS_IntervalActive Auto
-GlobalVariable Property _NQS_IntervalDuration Auto
 GlobalVariable Property _NQS_IntervalMaxSaves Auto
+GlobalVariable Property _NQS_IntervalDuration Auto
 GlobalVariable Property _NQS_IntervalSaveIndex Auto
+GlobalVariable Property _NQS_ConditionalActive Auto
+GlobalVariable Property _NQS_ConditionalMaxSaves Auto
+GlobalVariable Property _NQS_ConditionalSaveIndex Auto
 NQS_NamedQuicksaves_Main Property _RemoteMain Auto
-
-
-Int _ManualSaveKey_K
-Int _CyclicSaveKey_K
-Int _CyclicMaxSaves_S
-Int _IntervalActive_B
-Int _IntervalDuration_S
-Int _IntervalMaxSaves_S
 
 
 ; Called when the config menu is initialized.
@@ -45,140 +40,209 @@ Event OnPageReset(String a_page)
 	If (a_page == "$NQS_pages0")
 		SetCursorFillMode(LEFT_TO_RIGHT)
 		
-		AddHeaderOption("$NQS_HeaderOption_1")
-		AddHeaderOption("$NQS_HeaderOption_2")
-		
-		_ManualSaveKey_K = AddKeyMapOption("$NQS_KeyMapOption_ManualSaveKey", _NQS_ManualSaveKey.GetValue() As Int)
+		AddHeaderOption("$NQS_HeaderOption_Manual")
+		AddHeaderOption("")
+		AddKeyMapOptionST("ManualSaveKey_K", "$NQS_KeyMapOption_ManualSaveKey", _NQS_ManualSaveKey.GetValue() As Int)
 		AddEmptyOption()
+
+		AddHeaderOption("$NQS_HeaderOption_Cyclic")
+		AddHeaderOption("")
+		AddKeyMapOptionST("CyclicSaveKey_K", "$NQS_KeyMapOption_CyclicSaveKey", _NQS_CyclicSaveKey.GetValue() As Int)
+		AddSliderOptionST("CyclicMaxSaves_S", "$NQS_SliderOption_CyclicMaxSaves", _NQS_CyclicMaxSaves.GetValue() As Float)
 		
-		_CyclicSaveKey_K = AddKeyMapOption("$NQS_KeyMapOption_CyclicSaveKey", _NQS_CyclicSaveKey.GetValue() As Int)
-		_CyclicMaxSaves_S = AddSliderOption("$NQS_SliderOption_CyclicMaxSaves", _NQS_CyclicMaxSaves.GetValue() As Int)
-		
-		AddHeaderOption("$NQS_HeaderOption_3")
+		AddHeaderOption("$NQS_HeaderOption_Interval")
+		AddHeaderOption("")
+		AddToggleOptionST("IntervalActive_B", "$NQS_ToggleOption_IntervalActive", _NQS_IntervalActive.GetValue() As Bool)
+		AddSliderOptionST("IntervalMaxSaves_S", "$NQS_SliderOption_IntervalMaxSaves", _NQS_IntervalMaxSaves.GetValue() As Float)
 		AddEmptyOption()
-		_IntervalActive_B = AddToggleOption("$NQS_ToggleOption_IntervalActive", _NQS_IntervalActive.GetValue() As Bool)
-		_IntervalDuration_S = AddSliderOption("$NQS_SliderOption_IntervalDuration", _NQS_IntervalDuration.GetValue() As Int)
-		AddEmptyOption()
-		_IntervalMaxSaves_S = AddSliderOption("$NQS_SliderOption_IntervalMaxSaves", _NQS_IntervalMaxSaves.GetValue() As Int)
+		AddSliderOptionST("IntervalDuration_S", "$NQS_SliderOption_IntervalDuration", _NQS_IntervalDuration.GetValue() As Float)
+
+		AddHeaderOption("$NQS_HeaderOption_Conditional")
+		AddHeaderOption("")
+		AddToggleOptionST("ConditionalActive_B", "$NQS_ToggleOption_ConditionalActive", _NQS_ConditionalActive.GetValue() As Bool)
+		AddSliderOptionST("ConditionalMaxSaves_S", "$NQS_SliderOption_ConditionalMaxSaves", _NQS_ConditionalMaxSaves.GetValue() As Float)
 	EndIf
 EndEvent
 
 
-; Called when highlighting an option.
-; a_option - The option ID.
-Event OnOptionHighlight(Int a_option)
-	If (a_option == _ManualSaveKey_K)
-		SetInfoText("$NQS_InfoText_ManualSaveKey")
-	ElseIf (a_option == _CyclicSaveKey_K)
-		SetInfoText("$NQS_InfoText_CyclicSaveKey")
-	ElseIf (a_option == _CyclicMaxSaves_S)
-		SetInfoText("$NQS_InfoText_CyclicMaxSaves")
-	ElseIf (a_option == _IntervalActive_B)
-		SetInfoText("$NQS_InfoText_IntervalActive")
-	ElseIf (a_option == _IntervalDuration_S)
-		SetInfoText("$NQS_InfoText_IntervalDuration")
-	ElseIf (a_option == _IntervalMaxSaves_S)
-		SetInfoText("$NQS_InfoText_IntervalMaxSaves")
-	EndIf
-EndEvent
-
-
-; Called when resetting an option to its default value.
-; a_option - The option ID.
-Event OnOptionDefault(Int a_option)
-	If (a_option == _ManualSaveKey_K)
-		_RemoteMain.NQS_Reset(_NQS_ManualSaveKey)
-		SetKeymapOptionValue(a_option, _NQS_ManualSaveKey.GetValue() As Int)
-	ElseIf (a_option == _CyclicSaveKey_K)
-		_RemoteMain.NQS_Reset(_NQS_CyclicSaveKey)
-		SetKeymapOptionValue(a_option, _NQS_CyclicSaveKey.GetValue() As Int)
-	ElseIf (a_option == _CyclicMaxSaves_S)
-		_RemoteMain.NQS_Reset(_NQS_CyclicMaxSaves)
-		SetSliderOptionValue(a_option, _NQS_CyclicMaxSaves.GetValue() As Int)
-	ElseIf (a_option == _IntervalActive_B)
-		_RemoteMain.NQS_Reset(_NQS_IntervalActive)
-		SetToggleOptionValue(a_option, _NQS_IntervalActive.GetValue() As Bool)
-	ElseIf (a_option == _IntervalDuration_S)
-		_RemoteMain.NQS_Reset(_NQS_IntervalDuration)
-		SetSliderOptionValue(a_option, _NQS_IntervalDuration.GetValue() As Int)
-	ElseIf (a_option == _IntervalMaxSaves_S)
-		_RemoteMain.NQS_Reset(_NQS_IntervalMaxSaves)
-		SetSliderOptionValue(a_option, _NQS_IntervalMaxSaves.GetValue() As Int)
-	EndIf
-EndEvent
-
-
-; Called when a non-interactive option has been selected.
-; a_option - The option ID.
-Event OnOptionSelect(Int a_option)
-	If (a_option == _IntervalActive_B)
-		_RemoteMain.NQS_IntervalToggle()
-		SetToggleOptionValue(a_option, _NQS_IntervalActive.GetValue() As Bool)
-	EndIf
-EndEvent
-
-
-; Called when a slider option has been selected.
-; a_option - The option ID.
-Event OnOptionSliderOpen(Int a_option)
-	If (a_option == _CyclicMaxSaves_S)
-		SetSliderDialogStartValue(_NQS_CyclicMaxSaves.GetValue() As Int)
-		SetSliderDialogDefaultValue(10)
-		SetSliderDialogRange(1, 100)
-		SetSliderDialogInterval(1)
-	ElseIf (a_option == _IntervalDuration_S)
-		SetSliderDialogStartValue(_NQS_IntervalDuration.GetValue() As Int)
-		SetSliderDialogDefaultValue(30)
-		SetSliderDialogRange(10, 300)
-		SetSliderDialogInterval(5)
-	ElseIf (a_option == _IntervalMaxSaves_S)
-		SetSliderDialogStartValue(_NQS_IntervalMaxSaves.GetValue() As Int)
-		SetSliderDialogDefaultValue(10)
-		SetSliderDialogRange(1, 100)
-		SetSliderDialogInterval(1)
-	EndIf
-EndEvent
-
-
-; Called when a new slider value has been accepted.
-; a_option - The option ID.
-; a_value - The accepted value.
-Event OnOptionSliderAccept(Int a_option, Float a_value)
-	If (a_option == _CyclicMaxSaves_S)
-		_NQS_CyclicMaxSaves.SetValue(a_value)
-		SetSliderOptionValue(a_option, a_value)
-	ElseIf (a_option == _IntervalDuration_S)
-		_NQS_IntervalDuration.SetValue(a_value)
-		SetSliderOptionValue(a_option, a_value)
-	ElseIf (a_option == _IntervalMaxSaves_S)
-		_NQS_IntervalMaxSaves.SetValue(a_value)
-		SetSliderOptionValue(a_option, a_value)
-	EndIf
-EndEvent
-
-
-; Called when a key has been remapped.
-; a_option - The option ID.
-; a_keyCode - The new keycode.
-; a_conflictControl - The conflicting control if the keycode was already in use; "" otherwise.
-; a_conflictName - ModName of the conflicting mod; "" if there was no conflict or if conflicting with a vanilla control.
-Event OnOptionKeyMapChange(Int a_option, Int a_keyCode, String a_conflictControl, String a_conflictName)
-	If (a_option == _ManualSaveKey_K)
+; Manual Save Key
+State ManualSaveKey_K
+	Event OnKeyMapChangeST(Int a_newKeyCode, String a_conflictControl, String a_conflictName)
 		If (KeyConflict(a_conflictControl, a_conflictName))
 			_RemoteMain.NQS_UnregisterOldKey(_NQS_ManualSaveKey.GetValue() As Int)
-			_NQS_ManualSaveKey.SetValue(a_keyCode)
-			_RemoteMain.NQS_RegisterNewKey(_NQS_ManualSaveKey.GetValue() As Int)
-			SetKeymapOptionValue(a_option, a_keyCode)
+			_NQS_ManualSaveKey.SetValue(a_newKeyCode)
+			_RemoteMain.NQS_RegisterNewKey(a_newKeyCode)
+			SetKeymapOptionValueST(a_newKeyCode)
 		EndIf
-	ElseIf (a_option == _CyclicSaveKey_K)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_ManualSaveKey)
+		SetKeymapOptionValueST(_NQS_ManualSaveKey.GetValue() As Int)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_ManualSaveKey")
+	EndEvent
+EndState
+
+
+; Cyclic Save Key
+State CyclicSaveKey_K
+	Event OnKeyMapChangeST(Int a_newKeyCode, String a_conflictControl, String a_conflictName)
 		If (KeyConflict(a_conflictControl, a_conflictName))
 			_RemoteMain.NQS_UnregisterOldKey(_NQS_CyclicSaveKey.GetValue() As Int)
-			_NQS_CyclicSaveKey.SetValue(a_keyCode)
-			_RemoteMain.NQS_RegisterNewKey(_NQS_CyclicSaveKey.GetValue() As Int)
-			SetKeymapOptionValue(a_option, a_keyCode)
+			_NQS_CyclicSaveKey.SetValue(a_newKeyCode)
+			_RemoteMain.NQS_RegisterNewKey(a_newKeyCode)
+			SetKeymapOptionValueST(a_newKeyCode)
 		EndIf
-	EndIf
-EndEvent
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_CyclicSaveKey)
+		SetKeymapOptionValueST(_NQS_CyclicSaveKey.GetValue() As Int)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_CyclicSaveKey")
+	EndEvent
+EndState
+
+
+; Cyclic Max Saves
+State CyclicMaxSaves_S
+	Event OnSliderOpenST()
+		SetSliderDialogStartValue(_NQS_CyclicMaxSaves.GetValue() As Float)
+		SetSliderDialogDefaultValue(10.0)
+		SetSliderDialogRange(1.0, 100.0)
+		SetSliderDialogInterval(1.0)
+	EndEvent
+
+	Event OnSliderAcceptST(Float a_value)
+		_NQS_CyclicMaxSaves.SetValue(a_value)
+		SetSliderOptionValueST(a_value)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_CyclicMaxSaves)
+		SetSliderOptionValueST(_NQS_CyclicMaxSaves.GetValue() As Float)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_CyclicMaxSaves")
+	EndEvent
+EndState
+
+
+; Interval Active
+State IntervalActive_B
+	Event OnSelectST()
+		_RemoteMain.NQS_Toggle(_NQS_IntervalActive)
+		SetToggleOptionValueST(_NQS_IntervalActive.GetValue() As Bool)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_IntervalActive)
+		SetToggleOptionValueST(_NQS_IntervalActive.GetValue() As Bool)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_IntervalActive")
+	EndEvent
+EndState
+
+
+; Interval Max Saves
+State IntervalMaxSaves_S
+	Event OnSliderOpenST()
+		SetSliderDialogStartValue(_NQS_IntervalMaxSaves.GetValue() As Float)
+		SetSliderDialogDefaultValue(1.0)
+		SetSliderDialogRange(1.0, 100.0)
+		SetSliderDialogInterval(1.0)
+	EndEvent
+
+	Event OnSliderAcceptST(Float a_value)
+		_NQS_IntervalMaxSaves.SetValue(a_value)
+		SetSliderOptionValueST(a_value)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_IntervalMaxSaves)
+		SetSliderOptionValueST(_NQS_IntervalMaxSaves.GetValue() As Float)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_IntervalMaxSaves")
+	EndEvent
+EndState
+
+
+; Interval Duration
+State IntervalDuration_S
+	Event OnSliderOpenST()
+		SetSliderDialogStartValue(_NQS_IntervalDuration.GetValue() As Float)
+		SetSliderDialogDefaultValue(30.0)
+		SetSliderDialogRange(5.0, 300.0)
+		SetSliderDialogInterval(5.0)
+	EndEvent
+
+	Event OnSliderAcceptST(Float a_value)
+		_NQS_IntervalDuration.SetValue(a_value)
+		SetSliderOptionValueST(a_value)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_IntervalDuration)
+		SetSliderOptionValueST(_NQS_IntervalDuration.GetValue() As Float)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_IntervalDuration")
+	EndEvent
+EndState
+
+
+; Conditional Active
+State ConditionalActive_B
+	Event OnSelectST()
+		_RemoteMain.NQS_Toggle(_NQS_ConditionalActive)
+		SetToggleOptionValueST(_NQS_ConditionalActive.GetValue() As Bool)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_ConditionalActive)
+		SetToggleOptionValueST(_NQS_ConditionalActive.GetValue() As Bool)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_ConditionalActive")
+	EndEvent
+EndState
+
+
+; Conditional Max Saves
+State ConditionalMaxSaves_S
+	Event OnSliderOpenST()
+		SetSliderDialogStartValue(_NQS_ConditionalMaxSaves.GetValue() As Float)
+		SetSliderDialogDefaultValue(1.0)
+		SetSliderDialogRange(1.0, 100.0)
+		SetSliderDialogInterval(1.0)
+	EndEvent
+
+	Event OnSliderAcceptST(Float a_value)
+		_NQS_ConditionalMaxSaves.SetValue(a_value)
+		SetSliderOptionValueST(a_value)
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_ConditionalMaxSaves)
+		SetSliderOptionValueST(_NQS_ConditionalMaxSaves.GetValue() As Float)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_ConditionalMaxSaves")
+	EndEvent
+EndState
 
 
 ; Returns the static version of this script.
