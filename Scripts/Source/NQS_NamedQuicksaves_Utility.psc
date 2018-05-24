@@ -1,4 +1,4 @@
-ScriptName NQS_NamedQuicksaves_Utility
+ScriptName NQS_NamedQuicksaves_Utility Extends Form
 
 
 ; Gets the player hash used to uniquely identify the player's save profile.

@@ -14,6 +14,11 @@ $flags = $sseSrc + "\TESV_Papyrus_Flags.flg"
 & "$papyrus" "$usrSrc\Scripts\Source" -f="$flags" -i="$sseSrc;$usrSrc\Scripts\Source" -o="$outDir\Scripts" -a
 
 
+Write-Output ""
+Write-Output "Copy Tasks"
+Write-Output ""
+
+
 # MOVE TRANSLATION FILES
 Get-ChildItem "$usrSrc\Interface\Translations" -Filter *.txt |
 Foreach-Object {
@@ -31,4 +36,14 @@ Foreach-Object {
 	$fileName = $_.Name
 	Copy-Item -Path "$filePath" -Destination "$outDir\SKSE\Plugins"
 	Write-Output "CP $outDir\SKSE\Plugins\$fileName"
+}
+
+
+# MOVE ESPS
+Get-ChildItem "$outDir" -Filter *.esp |
+Foreach-Object {
+	$filePath = $_.FullName
+	$fileName = $_.Name
+	Copy-Item -Path "$filePath" -Destination "$usrSrc"
+	Write-Output "CP $usrSrc\$fileName"
 }

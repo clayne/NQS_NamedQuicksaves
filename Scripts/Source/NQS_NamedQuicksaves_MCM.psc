@@ -1,17 +1,15 @@
 ScriptName NQS_NamedQuicksaves_MCM Extends SKI_ConfigBase
 
 
-GlobalVariable Property _NQS_ManualSaveKey Auto
-GlobalVariable Property _NQS_CyclicSaveKey Auto
-GlobalVariable Property _NQS_CyclicMaxSaves Auto
-GlobalVariable Property _NQS_CyclicSaveIndex Auto
-GlobalVariable Property _NQS_IntervalActive Auto
-GlobalVariable Property _NQS_IntervalMaxSaves Auto
-GlobalVariable Property _NQS_IntervalDuration Auto
-GlobalVariable Property _NQS_IntervalSaveIndex Auto
-GlobalVariable Property _NQS_ConditionalActive Auto
-GlobalVariable Property _NQS_ConditionalMaxSaves Auto
-GlobalVariable Property _NQS_ConditionalSaveIndex Auto
+GlobalVariable Property _NQS_ManualSaveKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicSaveKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicLoadKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicMaxSaves Auto  ; Int
+GlobalVariable Property _NQS_CyclicSaveIndex Auto  ; Int
+GlobalVariable Property _NQS_IntervalActive Auto  ; Bool
+GlobalVariable Property _NQS_IntervalMaxSaves Auto  ; Int
+GlobalVariable Property _NQS_IntervalDuration Auto  ; Float
+GlobalVariable Property _NQS_IntervalSaveIndex Auto  ; Int
 NQS_NamedQuicksaves_Main Property _RemoteMain Auto
 
 
@@ -49,6 +47,8 @@ Event OnPageReset(String a_page)
 		AddHeaderOption("")
 		AddKeyMapOptionST("CyclicSaveKey_K", "$NQS_KeyMapOption_CyclicSaveKey", _NQS_CyclicSaveKey.GetValue() As Int)
 		AddSliderOptionST("CyclicMaxSaves_S", "$NQS_SliderOption_CyclicMaxSaves", _NQS_CyclicMaxSaves.GetValue() As Float)
+		AddKeyMapOptionST("CyclicLoadKey_K", "$NQS_KeyMapOption_CyclicLoadKey", _NQS_CyclicLoadKey.GetValue() As Int)
+		AddEmptyOption()
 		
 		AddHeaderOption("$NQS_HeaderOption_Interval")
 		AddHeaderOption("")
@@ -56,11 +56,6 @@ Event OnPageReset(String a_page)
 		AddSliderOptionST("IntervalMaxSaves_S", "$NQS_SliderOption_IntervalMaxSaves", _NQS_IntervalMaxSaves.GetValue() As Float)
 		AddEmptyOption()
 		AddSliderOptionST("IntervalDuration_S", "$NQS_SliderOption_IntervalDuration", _NQS_IntervalDuration.GetValue() As Float)
-
-		AddHeaderOption("$NQS_HeaderOption_Conditional")
-		AddHeaderOption("")
-		AddToggleOptionST("ConditionalActive_B", "$NQS_ToggleOption_ConditionalActive", _NQS_ConditionalActive.GetValue() As Bool)
-		AddSliderOptionST("ConditionalMaxSaves_S", "$NQS_SliderOption_ConditionalMaxSaves", _NQS_ConditionalMaxSaves.GetValue() As Float)
 	EndIf
 EndEvent
 
@@ -134,6 +129,28 @@ State CyclicMaxSaves_S
 EndState
 
 
+; Cyclic Load Key
+State CyclicLoadKey_K
+	Event OnKeyMapChangeST(Int a_newKeyCode, String a_conflictControl, String a_conflictName)
+		If (KeyConflict(a_conflictControl, a_conflictName))
+			_RemoteMain.NQS_UnregisterOldKey(_NQS_CyclicLoadKey.GetValue() As Int)
+			_NQS_CyclicLoadKey.SetValue(a_newKeyCode)
+			_RemoteMain.NQS_RegisterNewKey(a_newKeyCode)
+			SetKeymapOptionValueST(a_newKeyCode)
+		EndIf
+	EndEvent
+
+	Event OnDefaultST()
+		_RemoteMain.NQS_Reset(_NQS_CyclicLoadKey)
+		SetKeymapOptionValueST(_NQS_CyclicLoadKey.GetValue() As Int)
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_CyclicLoadKey")
+	EndEvent
+EndState
+
+
 ; Interval Active
 State IntervalActive_B
 	Event OnSelectST()
@@ -198,49 +215,6 @@ State IntervalDuration_S
 
 	Event OnHighlightST()
 		SetInfoText("$NQS_InfoText_IntervalDuration")
-	EndEvent
-EndState
-
-
-; Conditional Active
-State ConditionalActive_B
-	Event OnSelectST()
-		_RemoteMain.NQS_Toggle(_NQS_ConditionalActive)
-		SetToggleOptionValueST(_NQS_ConditionalActive.GetValue() As Bool)
-	EndEvent
-
-	Event OnDefaultST()
-		_RemoteMain.NQS_Reset(_NQS_ConditionalActive)
-		SetToggleOptionValueST(_NQS_ConditionalActive.GetValue() As Bool)
-	EndEvent
-
-	Event OnHighlightST()
-		SetInfoText("$NQS_InfoText_ConditionalActive")
-	EndEvent
-EndState
-
-
-; Conditional Max Saves
-State ConditionalMaxSaves_S
-	Event OnSliderOpenST()
-		SetSliderDialogStartValue(_NQS_ConditionalMaxSaves.GetValue() As Float)
-		SetSliderDialogDefaultValue(1.0)
-		SetSliderDialogRange(1.0, 100.0)
-		SetSliderDialogInterval(1.0)
-	EndEvent
-
-	Event OnSliderAcceptST(Float a_value)
-		_NQS_ConditionalMaxSaves.SetValue(a_value)
-		SetSliderOptionValueST(a_value)
-	EndEvent
-
-	Event OnDefaultST()
-		_RemoteMain.NQS_Reset(_NQS_ConditionalMaxSaves)
-		SetSliderOptionValueST(_NQS_ConditionalMaxSaves.GetValue() As Float)
-	EndEvent
-
-	Event OnHighlightST()
-		SetInfoText("$NQS_InfoText_ConditionalMaxSaves")
 	EndEvent
 EndState
 

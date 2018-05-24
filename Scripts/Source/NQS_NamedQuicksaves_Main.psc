@@ -4,17 +4,15 @@ ScriptName NQS_NamedQuicksaves_Main Extends Quest
 Import NQS_NamedQuicksaves_Utility
 
 
-GlobalVariable Property _NQS_ManualSaveKey Auto
-GlobalVariable Property _NQS_CyclicSaveKey Auto
-GlobalVariable Property _NQS_CyclicMaxSaves Auto
-GlobalVariable Property _NQS_CyclicSaveIndex Auto
-GlobalVariable Property _NQS_IntervalActive Auto
-GlobalVariable Property _NQS_IntervalMaxSaves Auto
-GlobalVariable Property _NQS_IntervalDuration Auto
-GlobalVariable Property _NQS_IntervalSaveIndex Auto
-GlobalVariable Property _NQS_ConditionalActive Auto
-GlobalVariable Property _NQS_ConditionalMaxSaves Auto
-GlobalVariable Property _NQS_ConditionalSaveIndex Auto
+GlobalVariable Property _NQS_ManualSaveKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicSaveKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicLoadKey Auto  ; Int
+GlobalVariable Property _NQS_CyclicMaxSaves Auto  ; Int
+GlobalVariable Property _NQS_CyclicSaveIndex Auto  ; Int
+GlobalVariable Property _NQS_IntervalActive Auto  ; Bool
+GlobalVariable Property _NQS_IntervalMaxSaves Auto  ; Int
+GlobalVariable Property _NQS_IntervalDuration Auto  ; Float
+GlobalVariable Property _NQS_IntervalSaveIndex Auto  ; Int
 Actor Property _NQS_PlayerRef Auto
 
 
@@ -23,15 +21,13 @@ Event OnInit()
 	UnregisterForUpdate()
 	_NQS_ManualSaveKey.SetValue(-1)
 	_NQS_CyclicSaveKey.SetValue(-1)
+	_NQS_CyclicLoadKey.SetValue(-1)
 	_NQS_CyclicMaxSaves.SetValue(10)
 	_NQS_CyclicSaveIndex.SetValue(1)
 	_NQS_IntervalActive.SetValue(0)
 	_NQS_IntervalMaxSaves.SetValue(10)
 	_NQS_IntervalDuration.SetValue(30.0)
 	_NQS_IntervalSaveIndex.SetValue(1)
-	_NQS_ConditionalActive.SetValue(0)
-	_NQS_ConditionalMaxSaves.SetValue(10)
-	_NQS_ConditionalSaveIndex.SetValue(1)
 EndEvent
 
 
@@ -40,6 +36,8 @@ Event OnKeyDown(Int a_keyCode)
 		Game.RequestSave()
 	ElseIf (a_keyCode == _NQS_CyclicSaveKey.GetValue() As Int)
 		NQS_MakeSave(_NQS_CyclicMaxSaves, _NQS_CyclicSaveIndex, "Cyclic")
+	ElseIf (a_keyCode == _NQS_CyclicLoadKey.GetValue() As Int)
+		NQS_LoadSave(_NQS_CyclicSaveIndex, "Cyclic")
 	EndIf
 EndEvent
 
@@ -73,6 +71,9 @@ Function NQS_Reset(GlobalVariable a_globalVar)
 	ElseIf (a_globalVar == _NQS_CyclicSaveKey)
 		NQS_UnregisterOldKey(_NQS_CyclicSaveKey.GetValue() As Int)
 		_NQS_CyclicSaveKey.SetValue(-1)
+	ElseIf (a_globalVar == _NQS_CyclicLoadKey)
+		NQS_UnregisterOldKey(_NQS_CyclicLoadKey.GetValue() As Int)
+		_NQS_CyclicLoadKey.SetValue(-1)
 	ElseIf (a_globalVar == _NQS_CyclicMaxSaves)
 		_NQS_CyclicMaxSaves.SetValue(10)
 	ElseIf (a_globalVar == _NQS_CyclicSaveIndex)
@@ -86,12 +87,6 @@ Function NQS_Reset(GlobalVariable a_globalVar)
 		_NQS_IntervalDuration.SetValue(30.0)
 	ElseIf (a_globalVar == _NQS_IntervalSaveIndex)
 		_NQS_IntervalSaveIndex.SetValue(1)
-	ElseIf (a_globalVar == _NQS_ConditionalActive)
-		_NQS_ConditionalActive.SetValue(0)
-	ElseIf (a_globalVar == _NQS_ConditionalMaxSaves)
-		_NQS_ConditionalMaxSaves.SetValue(10)
-	ElseIf (a_globalVar == _NQS_ConditionalSaveIndex)
-		_NQS_ConditionalSaveIndex.SetValue(1)
 	EndIf
 EndFunction
 
@@ -99,7 +94,7 @@ EndFunction
 ; Emulates the game's save format and makes a save.
 ; a_maxSaves - The max allowed saves for this savetype.
 ; a_saveIndex - The index the current savetype is at (resets when it exceeds a_maxSaves).
-; a_type - The type of the save to be made.
+; a_type - The type of save to be made.
 Function NQS_MakeSave(GlobalVariable a_maxSaves, GlobalVariable a_saveIndex, String a_type)
 	If (a_saveIndex.GetValue() As Int > a_maxSaves.GetValue() As Int)
 		NQS_Reset(a_saveIndex)
@@ -112,6 +107,16 @@ Function NQS_MakeSave(GlobalVariable a_maxSaves, GlobalVariable a_saveIndex, Str
 EndFunction
 
 
+; Loads the specified save type.
+; a_saveIndex - The index the current savetype is at.
+; a_type - The type of save to load.
+Function NQS_LoadSave(GlobalVariable a_saveIndex, String a_type)
+	String playerName = _NQS_PlayerRef.GetActorBase().GetName()
+	String hexName = StringToHex(playerName)
+	Game.LoadGame("Save" + Math.Floor(a_saveIndex.GetValue() As Int - 1) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
+EndFunction
+
+
 ; Toggles variable on/off.
 ; a_globalVar - The variable to toggle.
 Function NQS_Toggle(GlobalVariable a_globalVar)
@@ -119,10 +124,7 @@ Function NQS_Toggle(GlobalVariable a_globalVar)
 		NQS_Reset(a_globalVar)
 	Else
 		a_globalVar.SetValue(1)
-	EndIf
-
-	If (a_globalVar == _NQS_IntervalActive)
-		If (_NQS_IntervalActive.GetValue() As Bool)
+		If (a_globalVar == _NQS_IntervalActive)
 			RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
 		EndIf
 	EndIf
