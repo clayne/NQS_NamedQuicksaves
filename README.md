@@ -36,7 +36,7 @@ Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_1_1.ess
 
 6. Open cheat engine and open `SkyrimSE.exe`.
 
-7. Enable the `Hex` box and scane for the hash using `Scan Type: Exact Value` and `Value Type: 4 Bytes`.
+7. Enable the `Hex` box and scan for the hash using `Scan Type: Exact Value` and `Value Type: 4 Bytes`.
 
 8. Copy all green addresses to the addresslist.
 
