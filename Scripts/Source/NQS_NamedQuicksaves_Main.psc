@@ -17,17 +17,15 @@ Actor Property _NQS_PlayerRef Auto
 
 
 Event OnInit()
-	UnregisterForAllKeys()
-	UnregisterForUpdate()
-	_NQS_ManualSaveKey.SetValue(-1)
-	_NQS_CyclicSaveKey.SetValue(-1)
-	_NQS_CyclicLoadKey.SetValue(-1)
-	_NQS_CyclicMaxSaves.SetValue(10)
-	_NQS_CyclicSaveIndex.SetValue(1)
-	_NQS_IntervalActive.SetValue(0)
-	_NQS_IntervalMaxSaves.SetValue(10)
-	_NQS_IntervalDuration.SetValue(30.0)
-	_NQS_IntervalSaveIndex.SetValue(1)
+	NQS_Reset(_NQS_ManualSaveKey)
+	NQS_Reset(_NQS_CyclicSaveKey)
+	NQS_Reset(_NQS_CyclicLoadKey)
+	NQS_Reset(_NQS_CyclicMaxSaves)
+	NQS_Reset(_NQS_CyclicSaveIndex)
+	NQS_Reset(_NQS_IntervalActive)
+	NQS_Reset(_NQS_IntervalMaxSaves)
+	NQS_Reset(_NQS_IntervalDuration)
+	NQS_Reset(_NQS_IntervalSaveIndex)
 EndEvent
 
 
