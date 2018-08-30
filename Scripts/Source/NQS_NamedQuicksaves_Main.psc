@@ -101,7 +101,7 @@ Function NQS_MakeSave(GlobalVariable a_maxSaves, GlobalVariable a_saveIndex, Str
 	EndIf
 	String playerName = _NQS_PlayerRef.GetActorBase().GetName()
 	String hexName = StringToHex(playerName)
-	Game.SaveGame("Save" + Math.Floor(a_saveIndex.GetValue() As Int) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
+	Game.SaveGame("Save" + Math.Floor(a_saveIndex.GetValue() As Float) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
 	a_saveIndex.SetValue(a_saveIndex.GetValue() As Int + 1)
 	Debug.Notification("$Saving...")
 EndFunction
@@ -113,7 +113,7 @@ EndFunction
 Function NQS_LoadSave(GlobalVariable a_saveIndex, String a_type)
 	String playerName = _NQS_PlayerRef.GetActorBase().GetName()
 	String hexName = StringToHex(playerName)
-	Game.LoadGame("Save" + Math.Floor(a_saveIndex.GetValue() As Int - 1) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
+	Game.LoadGame("Save" + Math.Floor(a_saveIndex.GetValue() As Float - 1.0) + "_" + getPlayerHash() + "_0_" + hexName + "_NQS" + a_type + "_000000_00000000000000_1_1")
 EndFunction
 
 

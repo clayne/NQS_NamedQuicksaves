@@ -4,10 +4,24 @@
     <None Include="exports.def" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="NQS_Utility.cpp" />
+    <ClCompile Include="src\NQS_Utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="NQS_Utility.h" />
+    <Filter Include="src">
+      <UniqueIdentifier>{b01212c0-841f-4768-9f98-ea99e11fbf34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{1ef0c0fa-3c2d-4993-9182-62a2fa68c3bd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\NQS_Utility.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

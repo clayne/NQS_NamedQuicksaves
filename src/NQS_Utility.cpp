@@ -1,11 +1,11 @@
-#include "../skse64_common/Relocation.h"
-#include "../skse64/GameTypes.h"
-#include "../skse64/PluginAPI.h"
-#include "../skse64/PapyrusNativeFunctions.h"
+#include "skse64/GameTypes.h"
+#include "skse64/PapyrusNativeFunctions.h"
+#include "skse64/PapyrusVM.h"
+#include "skse64/PluginAPI.h"
+#include "skse64_common/Relocation.h"
 #include <iomanip>
 #include <sstream>
 #include <string>
-
 
 #include "NQS_Utility.h"
 
@@ -38,7 +38,7 @@ namespace NQS_NamedQuicksaves_Utility
 
 	BSFixedString StringToHex(StaticFunctionTag* base, BSFixedString a_string)
 	{
-		std::string str = a_string.Get();
+		std::string str = a_string.c_str();
 
 		// Convert to hex
 		std::stringstream sstream;
@@ -59,9 +59,9 @@ namespace NQS_NamedQuicksaves_Utility
 	bool RegisterFuncs(VMClassRegistry* registry)
 	{
 		registry->RegisterFunction(
-			new NativeFunction0 <StaticFunctionTag, BSFixedString>("GetPlayerHash", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::GetPlayerHash, registry));
+			new NativeFunction0<StaticFunctionTag, BSFixedString>("GetPlayerHash", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::GetPlayerHash, registry));
 		registry->RegisterFunction(
-			new NativeFunction1 <StaticFunctionTag, BSFixedString, BSFixedString>("StringToHex", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::StringToHex, registry));
+			new NativeFunction1<StaticFunctionTag, BSFixedString, BSFixedString>("StringToHex", "NQS_NamedQuicksaves_Utility", NQS_NamedQuicksaves_Utility::StringToHex, registry));
 
 		return true;
 	}

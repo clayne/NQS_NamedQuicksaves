@@ -1,7 +1,6 @@
-﻿#include "../skse64/PluginAPI.h"
-#include "../skse64_common/skse_version.h"
+﻿#include "skse64/PluginAPI.h"
+#include "skse64_common/skse_version.h"
 #include <shlobj.h>
-
 
 #include "NQS_Utility.h"
 
@@ -11,7 +10,7 @@ static SKSEPapyrusInterface* g_papyrus = NULL;
 
 
 extern "C" {
-	bool SKSEPlugin_Query(const SKSEInterface * skse, PluginInfo * info)
+	bool SKSEPlugin_Query(const SKSEInterface* skse, PluginInfo* info)
 	{
 		gLog.OpenRelative(CSIDL_MYDOCUMENTS, "\\My Games\\Skyrim Special Edition\\SKSE\\NQS_NamedQuicksaves.log");
 		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
@@ -43,7 +42,7 @@ extern "C" {
 	}
 
 
-	bool SKSEPlugin_Load(const SKSEInterface * skse) {
+	bool SKSEPlugin_Load(const SKSEInterface* skse) {
 		_MESSAGE("NQS_NamedQuicksaves loaded");
 
 		g_papyrus = (SKSEPapyrusInterface *)skse->QueryInterface(kInterface_Papyrus);
@@ -58,4 +57,3 @@ extern "C" {
 		return true;
 	}
 };
-

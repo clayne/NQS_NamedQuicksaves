@@ -1,7 +1,8 @@
 #pragma once
-#include "../skse64/PluginAPI.h"
-#include "../skse64/GameTypes.h"
-#include "../skse64/PapyrusNativeFunctions.h"
+#include "skse64/GameTypes.h"
+#include "skse64/PapyrusNativeFunctions.h"
+#include "skse64/PapyrusVM.h"
+#include "skse64/PluginAPI.h"
 
 
 namespace NQS_NamedQuicksaves_Utility
