@@ -41,8 +41,12 @@ EndEvent
 
 
 Event OnUpdate()
-	NQS_MakeSave(_NQS_IntervalMaxSaves, _NQS_IntervalSaveIndex, "Interval")
-	RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
+	If (_NQS_PlayerRef.GetCombatState() == 0)
+		NQS_MakeSave(_NQS_IntervalMaxSaves, _NQS_IntervalSaveIndex, "Interval")
+		RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
+	Else
+		RegisterForSingleUpdate(60.0)
+	EndIf
 EndEvent
 
 
