@@ -238,9 +238,9 @@ Bool Function KeyConflict(String a_conflictControl, String a_conflictName)
 	If (a_conflictControl != "")
 		String msg
 		If (a_conflictName != "")
-			msg = "$NQS_KeyConflict_Msg1\n'" + a_conflictControl + "'\n(" + a_conflictName + ")\n\n$NQS_KeyConflict_Msg2"
+			msg = "$NQS_KeyConflict_Control{" + a_conflictControl + "}_Name{" + a_conflictName + "}"
 		Else
-			msg = "$NQS_KeyConflict_Msg1\n'" + a_conflictControl + "'\n\n$NQS_KeyConflict_Msg2"
+			msg = "$NQS_KeyConflict_Control{" + a_conflictControl + "}"
 		EndIf
 		Return ShowMessage(msg, True, "$Yes", "$No")
 	EndIf

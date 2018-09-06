@@ -1,6 +1,6 @@
 # USER DEFINED
-$sse = "D:\Games\Steam\steamapps\common\Skyrim Special Edition"
-$outDir = "D:\Mods\ModOrganizer2\mods\Named Quicksaves - A Save Manager - DEV"
+$sse = "D:\Games\SteamLibrary\steamapps\common\Skyrim Special Edition"
+$outDir = "D:\Mods\ModOrganizer2_SkyrimSE\mods\Named Quicksaves - A Save Manager - DEV"
 
 
 # GRAB DIRECTORIES

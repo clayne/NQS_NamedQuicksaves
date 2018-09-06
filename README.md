@@ -24,7 +24,7 @@ Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_1_1.ess
 
 ### Updating
 
-1. Clone the project and place the folder in `skse64`, it should look something like `skse64_2_00_07\src\skse64\NQS_NamedQuicksaves\NQS_NamedQuicksaves.vcxproj`, depending on the version of SKSE64.
+1. Clone the project and place the folder in `skse64`, it should look something like `skse64_2_00_08\src\skse64\NQS_NamedQuicksaves\NQS_NamedQuicksaves.vcxproj`, depending on the version of SKSE64.
 
 2. Open `skse64.sln` and remove `skse64_loader`, `skse64_loader_common`, and `skse64_steam_loader`. Now add `NQS_NamedQuicksaves.vcxproj` to the project.
 
