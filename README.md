@@ -4,7 +4,7 @@
 
 ### Save Structure
 
-Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_1_1.ess
+Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_4_1.ess
 
 * **Save3**: Type and index of save
 
@@ -16,11 +16,13 @@ Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_1_1.ess
 
 * **Tamriel**: coc code.
 
-* **000002**: Minutes played.
+* **000002**: Days, hours, minutes played.
 
 * **20180503063315**: Year, month, day, hour, minute, second in GMT + 0.
 
-* **1_1**:  Unknown flags.
+* **4**:  Player level.
+
+* **1**:  Unknown flags.
 
 ### Updating
 
