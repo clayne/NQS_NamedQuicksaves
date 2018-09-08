@@ -22,7 +22,7 @@ Save3_0C2D58E2_0_507269736F6E6572_Tamriel_000002_20180503063315_4_1.ess
 
 * **4**:  Player level.
 
-* **1**:  Unknown flags.
+* **1**:  Unknown flag.
 
 ### Updating
 
