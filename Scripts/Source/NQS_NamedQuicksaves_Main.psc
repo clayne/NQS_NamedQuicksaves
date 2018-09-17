@@ -41,6 +41,7 @@ EndEvent
 
 
 Event OnUpdate()
+	_NQS_PlayerRef.GetCombatState()  ; The function is buggy, so I have to call it once before using it.
 	If (_NQS_PlayerRef.GetCombatState() == 0)
 		NQS_MakeSave(_NQS_IntervalMaxSaves, _NQS_IntervalSaveIndex, "Interval")
 		RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)

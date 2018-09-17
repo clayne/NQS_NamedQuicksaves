@@ -6,7 +6,7 @@
 
 
 static PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
-static SKSEPapyrusInterface* g_papyrus = NULL;
+static SKSEPapyrusInterface* g_papyrus = 0;
 
 
 extern "C" {
