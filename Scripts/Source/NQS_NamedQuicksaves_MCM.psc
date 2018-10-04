@@ -56,6 +56,11 @@ Event OnPageReset(String a_page)
 		AddSliderOptionST("IntervalMaxSaves_S", "$NQS_SliderOption_IntervalMaxSaves", _NQS_IntervalMaxSaves.GetValue() As Float)
 		AddEmptyOption()
 		AddSliderOptionST("IntervalDuration_S", "$NQS_SliderOption_IntervalDuration", _NQS_IntervalDuration.GetValue() As Float)
+
+		AddHeaderOption("$NQS_HeaderOption_FISS")
+		AddHeaderOption("")
+		AddTextOptionST("NQS_Save_T", "$SAVE", "")
+		AddTextOptionST("NQS_Load_T", "$LOAD", "")
 	EndIf
 EndEvent
 
@@ -219,6 +224,38 @@ State IntervalDuration_S
 EndState
 
 
+; FISS Save
+State NQS_Save_T
+	Event OnSelectST()
+		BeginSavePreset()
+		ForcePageReset()
+	EndEvent
+
+	Event OnDefaultST()
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_Save")
+	EndEvent
+EndState
+
+
+; FISS Save
+State NQS_Load_T
+	Event OnSelectST()
+		BeginLoadPreset()
+		ForcePageReset()
+	EndEvent
+
+	Event OnDefaultST()
+	EndEvent
+
+	Event OnHighlightST()
+		SetInfoText("$NQS_InfoText_Load")
+	EndEvent
+EndState
+
+
 ; Returns the static version of this script.
 ; RETURN - The static version of this script.
 ; History:
@@ -245,4 +282,83 @@ Bool Function KeyConflict(String a_conflictControl, String a_conflictName)
 		Return ShowMessage(msg, True, "$Yes", "$No")
 	EndIf
 	Return True
+EndFunction
+
+
+; Saves the current preset using FISS
+Function BeginSavePreset()
+	If (!ShowMessage("$NQS_Save_AreYouSure") || !ShowMessage("$NQS_PleaseWait"))
+		Return
+	EndIf
+
+	FISSInterface fiss = FISSFactory.getFISS()
+	If (!fiss)
+		ShowMessage("$NQS_FISSNotFound", False, "$OK")
+		Return
+	EndIf
+
+	fiss.beginSave("NQS_NamedQuicksaves.xml", "NQS_NamedQuicksaves")
+
+	fiss.saveInt("ManualSaveKey_K", _NQS_ManualSaveKey.GetValue() As Int)
+	fiss.saveInt("CyclicSaveKey_K", _NQS_CyclicSaveKey.GetValue() As Int)
+	fiss.saveFloat("CyclicMaxSaves_S", _NQS_CyclicMaxSaves.GetValue() As Float)
+	fiss.saveInt("CyclicLoadKey_K", _NQS_CyclicLoadKey.GetValue() As Int)
+	fiss.saveInt("IntervalActive_B", _NQS_IntervalActive.GetValue() As Int)
+	fiss.saveFloat("IntervalMaxSaves_S", _NQS_IntervalMaxSaves.GetValue() As Float)
+	fiss.saveFloat("IntervalDuration_S", _NQS_IntervalDuration.GetValue() As Float)
+
+	String saveResult = fiss.endSave()
+
+	If (saveResult != "")
+		ShowMessage("$NQS_Save_Failure", False, "$OK")
+	Else
+		ShowMessage("$QNS_Save_Success", False, "$OK")
+	EndIf
+EndFunction
+
+
+; Loads the saved preset using FISS
+Function BeginLoadPreset()
+	If (!ShowMessage("$NQS_Load_AreYouSure") || !ShowMessage("$NQS_PleaseWait"))
+		Return
+	EndIf
+
+	FISSInterface fiss = FISSFactory.getFISS()
+	If (!fiss)
+		ShowMessage("$NQS_FISSNotFound", False, "$OK")
+		Return
+	EndIf
+
+	fiss.beginLoad("NQS_NamedQuicksaves.xml")
+
+	_RemoteMain.NQS_Reset(_NQS_ManualSaveKey)
+	_NQS_ManualSaveKey.SetValue(fiss.loadInt("ManualSaveKey_K"))
+
+	_RemoteMain.NQS_Reset(_NQS_CyclicSaveKey)
+	_NQS_CyclicSaveKey.SetValue(fiss.loadInt("CyclicSaveKey_K"))
+
+	_RemoteMain.NQS_Reset(_NQS_CyclicMaxSaves)
+	_NQS_CyclicMaxSaves.SetValue(fiss.loadFloat("CyclicMaxSaves_S"))
+
+	_RemoteMain.NQS_Reset(_NQS_CyclicLoadKey)
+	_NQS_CyclicLoadKey.SetValue(fiss.loadInt("CyclicLoadKey_K"))
+
+	_RemoteMain.NQS_Reset(_NQS_IntervalActive)
+	If (fiss.loadInt("IntervalActive_B"))
+		_RemoteMain.NQS_Toggle(_NQS_IntervalActive)
+	EndIf
+	
+	_RemoteMain.NQS_Reset(_NQS_IntervalMaxSaves)
+	_NQS_IntervalMaxSaves.SetValue(fiss.loadInt("IntervalMaxSaves_S"))
+
+	_RemoteMain.NQS_Reset(_NQS_IntervalDuration)
+	_NQS_IntervalDuration.SetValue(fiss.loadInt("IntervalDuration_S"))
+
+	String loadResult = fiss.endLoad()
+
+	If (loadResult != "")
+		ShowMessage("$NQS_Load_Failure", False, "$OK")
+	Else
+		ShowMessage("$NQS_Load_Success", False, "$OK")
+	EndIf
 EndFunction

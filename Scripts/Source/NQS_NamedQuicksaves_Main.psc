@@ -123,11 +123,11 @@ EndFunction
 ; Toggles variable on/off.
 ; a_globalVar - The variable to toggle.
 Function NQS_Toggle(GlobalVariable a_globalVar)
-	If (a_globalVar.GetValue() As Bool)
-		NQS_Reset(a_globalVar)
-	Else
-		a_globalVar.SetValue(1)
-		If (a_globalVar == _NQS_IntervalActive)
+	If (a_globalVar == _NQS_IntervalActive)
+		If (_NQS_IntervalActive.GetValue() As Bool)
+			NQS_Reset(_NQS_IntervalActive)
+		Else
+			_NQS_IntervalActive.SetValue(1)
 			RegisterForSingleUpdate(_NQS_IntervalDuration.GetValue() As Float * 60.0)
 		EndIf
 	EndIf

@@ -31,7 +31,7 @@ extern "C" {
 			_MESSAGE("Loaded in editor, marking as incompatible");
 			return false;
 		}
-		else if (skse->runtimeVersion != RUNTIME_VERSION_1_5_50)
+		else if (skse->runtimeVersion != RUNTIME_VERSION_1_5_53)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;

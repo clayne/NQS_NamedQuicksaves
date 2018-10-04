@@ -1,3 +1,5 @@
+param([string]$filePath)
+
 # USER DEFINED
 $sse = "D:\Games\SteamLibrary\steamapps\common\Skyrim Special Edition"
 $outDir = "D:\Mods\ModOrganizer2_SkyrimSE\mods\Named Quicksaves - A Save Manager - DEV"
@@ -11,8 +13,7 @@ $flags = $sseSrc + "\TESV_Papyrus_Flags.flg"
 
 
 # COMPILE PAPYRUS SCRIPTS
-& "$papyrus" "$usrSrc\Scripts\Source" -f="$flags" -i="$sseSrc;$usrSrc\Scripts\Source" -o="$outDir\Scripts" -a
-
+& "$papyrus" "$filePath" -f="$flags" -i="$sseSrc;$usrSrc\Scripts\Source" -o="$outDir\Scripts"
 
 Write-Output ""
 Write-Output "Copy Tasks"
@@ -26,16 +27,6 @@ Foreach-Object {
 	$fileName = $_.Name
 	Copy-Item -Path "$filePath" -Destination "$outDir\Interface\Translations"
 	Write-Output "CP $outDir\Interface\Translations\$fileName"
-}
-
-
-# MOVE DLLS
-Get-ChildItem "$usrSrc\SKSE\Plugins" -Filter *.dll |
-Foreach-Object {
-	$filePath = $_.FullName
-	$fileName = $_.Name
-	Copy-Item -Path "$filePath" -Destination "$outDir\SKSE\Plugins"
-	Write-Output "CP $outDir\SKSE\Plugins\$fileName"
 }
 
 
