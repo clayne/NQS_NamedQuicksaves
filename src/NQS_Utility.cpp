@@ -15,7 +15,7 @@ namespace NQS_NamedQuicksaves_Utility
 	BSFixedString GetPlayerHash(StaticFunctionTag* base)
 	{
 		// Grab player hash
-		static RelocPtr <SInt32> playerHash(0x34BC3F4);
+		static RelocPtr <SInt32> playerHash(0x034BC3F4);	// 1_5_62
 
 		// Convert to hex
 		std::stringstream sstream;
