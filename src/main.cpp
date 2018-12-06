@@ -3,6 +3,7 @@
 #include <shlobj.h>
 
 #include "NQS_Utility.h"
+#include "version.h"
 
 
 static PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
@@ -16,7 +17,7 @@ extern "C" {
 		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
 		gLog.SetLogLevel(IDebugLog::kLevel_DebugMessage);
 
-		_MESSAGE("NQS_NamedQuicksaves");
+		_MESSAGE("NQS_NamedQuicksaves v%s", NQS_VERSION_VERSTRING);
 
 		// populate info structure
 		info->infoVersion = PluginInfo::kInfoVersion;
@@ -31,7 +32,7 @@ extern "C" {
 			_MESSAGE("Loaded in editor, marking as incompatible");
 			return false;
 		}
-		else if (skse->runtimeVersion != RUNTIME_VERSION_1_5_53)
+		else if (skse->runtimeVersion != RUNTIME_VERSION_1_5_62)
 		{
 			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
 			return false;
