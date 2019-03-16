@@ -1,17 +1,15 @@
 #pragma once
-#include "skse64/GameTypes.h"
-#include "skse64/PapyrusNativeFunctions.h"
-#include "skse64/PapyrusVM.h"
-#include "skse64/PluginAPI.h"
+
+#include "skse64/GameTypes.h"  // BSFixedString
+
+class VMClassRegistry;
+struct StaticFunctionTag;
 
 
-namespace NQS_NamedQuicksaves_Utility
-{
-	BSFixedString GetPlayerHash(StaticFunctionTag* base);
-	// Gets the player's save profile hash
+// Gets the player's save profile hash
+BSFixedString GetPlayerHash(StaticFunctionTag* a_base);
 
-	BSFixedString StringToHex(StaticFunctionTag* base, BSFixedString a_string);
-	// Returns the passed string as its hex equivalent
+// Returns the passed string as its hex equivalent
+BSFixedString StringToHex(StaticFunctionTag* a_base, BSFixedString a_string);
 
-	bool RegisterFuncs(VMClassRegistry* registry);
-}
+bool RegisterFuncs(VMClassRegistry* a_registry);

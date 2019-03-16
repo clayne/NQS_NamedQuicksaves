@@ -1,9 +1,11 @@
-﻿#include "skse64/PluginAPI.h"
-#include "skse64_common/skse_version.h"
-#include <shlobj.h>
+﻿#include "common/IDebugLog.h"  // gLog
+#include "skse64/PluginAPI.h"  // PluginHandle, SKSEPapyrusInterface, SKSEInterface, PluginInfo
+#include "skse64_common/skse_version.h"  // RUNTIME_VERSION
 
-#include "NQS_Utility.h"
-#include "version.h"
+#include <shlobj.h>  // CSIDL_MYDOCUMENTS
+
+#include "NQS_Utility.h"  // RegisterFuncs
+#include "version.h"  // NQS_VERSION_VERSTRING
 
 
 static PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
@@ -11,7 +13,7 @@ static SKSEPapyrusInterface* g_papyrus = 0;
 
 
 extern "C" {
-	bool SKSEPlugin_Query(const SKSEInterface* skse, PluginInfo* info)
+	bool SKSEPlugin_Query(const SKSEInterface* a_skse, PluginInfo* a_info)
 	{
 		gLog.OpenRelative(CSIDL_MYDOCUMENTS, "\\My Games\\Skyrim Special Edition\\SKSE\\NQS_NamedQuicksaves.log");
 		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
@@ -19,40 +21,35 @@ extern "C" {
 
 		_MESSAGE("NQS_NamedQuicksaves v%s", NQS_VERSION_VERSTRING);
 
-		// populate info structure
-		info->infoVersion = PluginInfo::kInfoVersion;
-		info->name = "NQS_NamedQuicksaves";
-		info->version = 1;
+		a_info->infoVersion = PluginInfo::kInfoVersion;
+		a_info->name = "NQS_NamedQuicksaves";
+		a_info->version = 1;
 
-		// store plugin handle so we can identify ourselves later
-		g_pluginHandle = skse->GetPluginHandle();
+		g_pluginHandle = a_skse->GetPluginHandle();
 
-		if (skse->isEditor)
-		{
-			_MESSAGE("Loaded in editor, marking as incompatible");
+		if (a_skse->isEditor) {
+			_FATALERROR("[FATAL ERROR] Loaded in editor, marking as incompatible!\n");
 			return false;
 		}
-		else if (skse->runtimeVersion != RUNTIME_VERSION_1_5_62)
-		{
-			_MESSAGE("Unsupported runtime version %08X", skse->runtimeVersion);
+		if (a_skse->runtimeVersion != RUNTIME_VERSION_1_5_73) {
+			_FATALERROR("[FATAL ERROR] Unsupported runtime version %08X!\n", a_skse->runtimeVersion);
 			return false;
 		}
 
-		// supported runtime version
 		return true;
 	}
 
 
-	bool SKSEPlugin_Load(const SKSEInterface* skse) {
-		_MESSAGE("NQS_NamedQuicksaves loaded");
+	bool SKSEPlugin_Load(const SKSEInterface* a_skse)
+	{
+		_MESSAGE("[MESSAGE] NQS_NamedQuicksaves loaded");
 
-		g_papyrus = (SKSEPapyrusInterface *)skse->QueryInterface(kInterface_Papyrus);
+		g_papyrus = (SKSEPapyrusInterface *)a_skse->QueryInterface(kInterface_Papyrus);
 
-		//Check if the function registration was a success...
-		bool btest = g_papyrus->Register(NQS_NamedQuicksaves_Utility::RegisterFuncs);
-
-		if (btest) {
-			_MESSAGE("Registery succeeded");
+		if (g_papyrus->Register(RegisterFuncs)) {
+			_MESSAGE("[MESSAGE] Papyrus registration succeeded");
+		} else {
+			_FATALERROR("[FATAL ERROR] Papyrus registration failed!\n");
 		}
 
 		return true;
