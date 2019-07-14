@@ -1,38 +1,36 @@
-﻿#include "common/IDebugLog.h"  // gLog
-#include "skse64/PluginAPI.h"  // PluginHandle, SKSEPapyrusInterface, SKSEInterface, PluginInfo
-#include "skse64_common/skse_version.h"  // RUNTIME_VERSION
+﻿#include "skse64_common/skse_version.h"
 
-#include <shlobj.h>  // CSIDL_MYDOCUMENTS
+#include "Papyrus.h"
+#include "version.h"
 
-#include "NQS_Utility.h"  // RegisterFuncs
-#include "version.h"  // NQS_VERSION_VERSTRING
-
-
-static PluginHandle	g_pluginHandle = kPluginHandle_Invalid;
-static SKSEPapyrusInterface* g_papyrus = 0;
+#include "SKSE/API.h"
 
 
 extern "C" {
-	bool SKSEPlugin_Query(const SKSEInterface* a_skse, PluginInfo* a_info)
+	bool SKSEPlugin_Query(const SKSE::QueryInterface* a_skse, SKSE::PluginInfo* a_info)
 	{
-		gLog.OpenRelative(CSIDL_MYDOCUMENTS, "\\My Games\\Skyrim Special Edition\\SKSE\\NQS_NamedQuicksaves.log");
-		gLog.SetPrintLevel(IDebugLog::kLevel_Error);
-		gLog.SetLogLevel(IDebugLog::kLevel_DebugMessage);
+		SKSE::Logger::OpenRelative(FOLDERID_Documents, L"\\My Games\\Skyrim Special Edition\\SKSE\\NQS_NamedQuicksaves.log");
+		SKSE::Logger::SetPrintLevel(SKSE::Logger::Level::kDebugMessage);
+		SKSE::Logger::SetFlushLevel(SKSE::Logger::Level::kDebugMessage);
+		SKSE::Logger::UseLogStamp(true);
 
 		_MESSAGE("NQS_NamedQuicksaves v%s", NQS_VERSION_VERSTRING);
 
-		a_info->infoVersion = PluginInfo::kInfoVersion;
+		a_info->infoVersion = SKSE::PluginInfo::kVersion;
 		a_info->name = "NQS_NamedQuicksaves";
-		a_info->version = 1;
+		a_info->version = NQS_VERSION_MAJOR;
 
-		g_pluginHandle = a_skse->GetPluginHandle();
-
-		if (a_skse->isEditor) {
-			_FATALERROR("[FATAL ERROR] Loaded in editor, marking as incompatible!\n");
+		if (a_skse->IsEditor()) {
+			_FATALERROR("Loaded in editor, marking as incompatible!\n");
 			return false;
 		}
-		if (a_skse->runtimeVersion != RUNTIME_VERSION_1_5_73) {
-			_FATALERROR("[FATAL ERROR] Unsupported runtime version %08X!\n", a_skse->runtimeVersion);
+
+		switch (a_skse->RuntimeVersion()) {
+		case RUNTIME_VERSION_1_5_73:
+		case RUNTIME_VERSION_1_5_80:
+			break;
+		default:
+			_FATALERROR("Unsupported runtime version %08X!\n", a_skse->RuntimeVersion());
 			return false;
 		}
 
@@ -40,16 +38,18 @@ extern "C" {
 	}
 
 
-	bool SKSEPlugin_Load(const SKSEInterface* a_skse)
+	bool SKSEPlugin_Load(const SKSE::LoadInterface* a_skse)
 	{
-		_MESSAGE("[MESSAGE] NQS_NamedQuicksaves loaded");
+		_MESSAGE("NQS_NamedQuicksaves loaded");
 
-		g_papyrus = (SKSEPapyrusInterface *)a_skse->QueryInterface(kInterface_Papyrus);
+		if (!SKSE::Init(a_skse)) {
+			return false;
+		}
 
-		if (g_papyrus->Register(RegisterFuncs)) {
-			_MESSAGE("[MESSAGE] Papyrus registration succeeded");
-		} else {
-			_FATALERROR("[FATAL ERROR] Papyrus registration failed!\n");
+		auto papyrus = SKSE::GetPapyrusInterface();
+		if (!papyrus->Register(NQS_NamedQuicksaves_Utility::RegisterFuncs)) {
+			_FATALERROR("Failed to register papyrus reg callback!\n");
+			return false;
 		}
 
 		return true;

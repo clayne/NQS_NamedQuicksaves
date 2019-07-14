@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..;$(ProjectDir)include;$(SolutionDir)CommonLibSSE\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -59,9 +59,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ForcedIncludeFiles>common/IPrefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>ForceInclude.h;SKSE/Logger.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <CompileAs>CompileAsCpp</CompileAs>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
@@ -89,7 +90,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)\..;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)..;$(ProjectDir)include;$(SolutionDir)CommonLibSSE\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;PLUGIN_EXAMPLE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -97,9 +98,10 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <ForcedIncludeFiles>common/IPrefix.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <ForcedIncludeFiles>ForceInclude.h;SKSE/Logger.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <CompileAs>CompileAsCpp</CompileAs>
+      <UseFullPaths>false</UseFullPaths>
     </ClCompile>
     <Link>
       <ModuleDefinitionFile>exports.def</ModuleDefinitionFile>
@@ -126,21 +128,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\NQS_Utility.cpp" />
+    <ClCompile Include="src\Papyrus.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\NQS_Utility.h" />
+    <ClInclude Include="include\Papyrus.h" />
     <ClInclude Include="include\version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\common\common_vc14.vcxproj">
-      <Project>{d4c128a1-73dc-4941-a453-ce55af239ba8}</Project>
+    <ProjectReference Include="..\CommonLibSSE\CommonLibSSE.vcxproj">
+      <Project>{c1af9204-ee2d-421b-b11e-1d70d8acc11f}</Project>
     </ProjectReference>
     <ProjectReference Include="..\skse64\skse64.vcxproj">
       <Project>{7028b79c-06e3-4d9a-b38c-1dc3680b1bdb}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\skse64_common\skse64_common.vcxproj">
-      <Project>{5fd1c08d-db80-480c-a1c6-f0920005cd13}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
